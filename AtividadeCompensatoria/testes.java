@@ -32,6 +32,7 @@ public class testes {
         }
         gravaArq.printf("Clientes \t CPF");
         gravaArq.printf("\n------------------------");
+        // ESCREVE NO ARQUIVO.TXT
         for (int i = 0; i < n; i++) {
             gravaArq.printf("\n%s\t\t %s", clientes[i], CPFs[i]);
             gravaArq.printf("\n------------------------");
