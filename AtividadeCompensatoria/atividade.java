@@ -62,12 +62,15 @@ public class atividade {
                 switch (choose2) {
                     case 1:
                         showClientes();
+                        menu();
                         break;
                     case 2:
                         showProdutos();
+                        menu();
                         break;
                     case 3:
                         showVendas();
+                        menu();
                         break;
                     default:
                         System.out.println("Erro ao validar escolha, reiniciando....");
@@ -87,24 +90,22 @@ public class atividade {
         System.out.println("Nome: ");
         String name = sc.nextLine();
         System.out.println("CLIENTE CADASTRADO");
-        if (name != "" || name != null) {
-            try {
-                for (int i = 0; i < clientes.length; i++) {
-                    for (int j = 0; j < clientes[0].length; j++) {
-                        if (clientes[i][j] != null) {
-                            out.print(clientes[i][j] + " ");
+        try {
+            for (int i = 0; i < clientes.length; i++) {
+                for (int j = 0; j < clientes[0].length; j++) {
+                    if (clientes[i][j] != null) {
+                        out.print(clientes[i][j] + " ");
 
-                        } else {
-                            clientes[i][j] = name;
-                            out.print(clientes[i][j]);
-                        }
+                    } else {
+                        clientes[i][j] = name;
+                        out.print(clientes[i][j]);
                     }
                 }
-                out.println(" ");
-            } catch (NullPointerException e) {
-                clientes[1][0] = name;
-                out.print(clientes[1][0]);
             }
+            out.println(" ");
+        } catch (NullPointerException e) {
+            clientes[1][0] = name;
+            out.print(clientes[1][0]);
         }
 
         out.close();

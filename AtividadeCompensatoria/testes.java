@@ -1,63 +1,51 @@
 package AtividadeCompensatoria;
 
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class testes {
-    public static String teste[][] = new String[5][2];
-
     public static void main(String[] args) throws IOException {
-        String teste[][] = new String[5][2];
-        FileWriter fw = new FileWriter("teste.txt", true);
-        PrintWriter out = new PrintWriter(fw);
-        Scanner sc = new Scanner(System.in);
-
-        System.out.println(teste[4][0] == null);
-        System.out.println(teste.length);
-        System.out.println(teste[0].length);
-        menu();
-
-        /*
-         * for (int l = 0; l < teste.length; l++) {
-         * for (int c = 0; c < teste[0].length; c++) {
-         * System.out.print(teste[l][c] + " "); // imprime caracter a caracter
-         * }
-         * System.out.println(" "); // muda de linha;
-         * /*
-         * for (int l = 0; l < teste.length; l++) {
-         * for (int c = 0; c < teste[0].length; c++) {
-         * System.out.print(teste[l][c] + " "); // imprime caracter a caracter
-         * out.print(teste[l][c] + " ");
-         * }
-         * System.out.println(" "); // muda de linha
-         * out.print(" ");
-         * }
-         */
+        cadastro();
+        ler();
     }
 
-    public static void teste(String nome) {
-        if (nome != "" || nome != null) {
-            for (int l = 0; l < teste.length - 1; l++) {
-                for (int c = 0; c < teste[0].length; c++) {
-                    if (teste[l][c] != null) {
-                        System.out.print(teste[l][c] + " ");
-                    } else {
-                        teste[l][c] = nome;
-                        menu();
+    public static void cadastro() throws IOException {
+        Scanner sc = new Scanner(System.in);
+        FileWriter arq1 = new FileWriter("teste.txt");
+        PrintWriter gravaArq = new PrintWriter(arq1);
+        int n;
+        System.out.println("Qnts func? ");
+        n = sc.nextInt();
+        String[] clientes = new String[n];
+        String[] CPFs = new String[n];
+        for (int i = 0; i < n; i++) {
+            sc.nextLine();
+            System.out.print("Nome: ");
+            clientes[i] = sc.nextLine();
+            System.out.println();
+            System.out.print("CPF: ");
+            CPFs[i] = sc.nextLine();
+        }
+        gravaArq.printf("Clientes \t CPF");
+        gravaArq.printf("\n------------------------");
+        for (int i = 0; i < n; i++) {
+            gravaArq.printf("\n%s\t\t %s", clientes[i], CPFs[i]);
+            gravaArq.printf("\n------------------------");
+        }
+        arq1.close();
+    }
 
-                    }
-                }
-                System.out.println(" ");
-            }
+    // MOSTRA NO CONSOLE A LISTA DE CLIENTES
+    public static void ler() throws FileNotFoundException {
+        File arq = new File("teste.txt");
+        Scanner scArq = new Scanner(arq);
+        while (scArq.hasNextLine()) {
+            String data = scArq.nextLine();
+            System.out.println(data);
         }
     }
-
-    public static void menu() {
-        Scanner sc = new Scanner(System.in);
-        System.out.print("Nome: ");
-        String name = sc.nextLine();
-        teste(name);
-        sc.close();
-    }
-
 }
