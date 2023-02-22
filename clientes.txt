@@ -1,6 +1,5 @@
---------------------------
-|NOME		/CPF		|
-E
---------------------------
-|NOME		/CPF		|
-A
+NOME		/CPF		
+Roberto Alves		123456789
+Gabriel Evaristo		987654321
+Rogerio Rodrigues		00000000000
+|Rosangela Alvares		12345543210|
