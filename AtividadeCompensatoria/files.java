@@ -135,6 +135,7 @@ public class files {
                         System.out.print("Número de clientes: ");
                         int numClientes = scChoose.nextInt();
                         escreveArquivo(numClientes);
+                        System.out.println("PRES");
                         menu();
                         break;
                     case 2:
@@ -160,6 +161,7 @@ public class files {
                         scChoose.nextLine();
                         String docs = scChoose.nextLine();
                         pesquisa(docs);
+                        menu();
                         break;
                     case 2:
                         System.out.println("PESQUISA PRODUTO");
@@ -181,6 +183,7 @@ public class files {
                 switch (choose2) {
                     case 1:
                         lerArqCliente();
+                        menu();
                         break;
                     case 2:
                         System.out.println("PESQUISA PRODUTO");
