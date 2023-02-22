@@ -2,4 +2,6 @@ NOME		/CPF
 Roberto Alves		123456789
 Gabriel Evaristo		987654321
 Rogerio Rodrigues		00000000000
-|Rosangela Alvares		12345543210|
+Rosangela Alvares		12345543210
+Rogerio Marcos		77766655512
+Alberto Nunes		66655544432
