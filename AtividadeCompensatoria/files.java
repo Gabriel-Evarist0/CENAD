@@ -8,6 +8,7 @@ public class files {
     public static String[] clientes = new String[numClient];
 
     public static void main(String[] args) throws IOException {
+        //testDebugger();
         menu();
     }
 
@@ -23,16 +24,15 @@ public class files {
             // LOGICA PARA VERIFICAR SE O ARQUIVO ESTA VAZIO/NÃO EXISTE E ESCREVER O LAYOUT
             // PADRÃO
             boolean statusArq = arq.createNewFile();
-            // System.out.print(statusArq);
-            if (lerArqCliente() == "") {
+            if (lerArqCliente().equals("")) {
 
                 pw.println("|NOME\t\t\t\tCPF\t\t|");
                 for (int i = 0; i < numClient; i++) {
                     System.out.println("Nome: ");
                     cl[i] = scanner.nextLine();
-                    System.out.print("CPF:");
+                    System.out.println("CPF:");
                     String cpf = scanner.nextLine();
-                    pw.println("|" + cl[i] + "\t\t" + cpf + "|");
+                    pw.println(cl[i] +"-"+ "\t\t" + cpf);
                     pw.flush();
                 }
             }
@@ -87,7 +87,7 @@ public class files {
 
         int offset = 0;
         int length = doc.length();
-        if(action == "cliente"){
+        if(action.equals("cliente")){
             try {
                 FileReader fileReader = new FileReader(arq);
                 BufferedReader buffReader = new BufferedReader(fileReader);
@@ -95,7 +95,25 @@ public class files {
                 while ((linha = buffReader.readLine()) != null) {
                     linha = linha + "\n";
                     if (linha.contains(doc)) {
-                        System.out.println(linha);
+                        //System.out.println(linha);
+                        return linha;
+                    }
+                }
+                fileReader.close();
+                buffReader.close();
+            } catch (IOException e) {
+                System.out.println("arquivo não encontrado, sera criado no processo");
+            }
+        }else if(action.equals("produtos")){
+            try {
+                FileReader fileReader = new FileReader(arqProd);
+                BufferedReader buffReader = new BufferedReader(fileReader);
+
+                while ((linha = buffReader.readLine()) != null) {
+                    linha = linha + "\n";
+                    if (linha.contains(doc)) {
+                        //System.out.println(linha);
+                        return linha;
                     }
                 }
 
@@ -104,22 +122,21 @@ public class files {
             } catch (IOException e) {
                 System.out.println("arquivo não encontrado, sera criado no processo");
             }
-        }else if(action == "produtos"){
-            try {
-                FileReader fileReader = new FileReader(arqProd);
-                BufferedReader buffReader = new BufferedReader(fileReader);
-
+        }else if(action.equals("vendas")){
+            FileReader fileReader = new FileReader(arqVenda);
+            BufferedReader buffReader = new BufferedReader(fileReader);
+            Scanner scanner = new Scanner(new File ("./vendas.txt"));
+            scanner.useDelimiter("/");
+            try{
                 while ((linha = buffReader.readLine()) != null) {
                     linha = linha + "\n";
-                    if (linha.contains(doc)) {
+                    if (linha.contains("Cliente: " + doc)) {
                         System.out.println(linha);
-                        return linha;
                     }
                 }
-
                 fileReader.close();
                 buffReader.close();
-            } catch (IOException e) {
+            }catch (IOException e) {
                 System.out.println("arquivo não encontrado, sera criado no processo");
             }
         }
@@ -155,17 +172,20 @@ public class files {
                         System.out.print("Número de clientes: ");
                         int numClientes = scChoose.nextInt();
                         escreveArquivo(numClientes);
-                        System.out.println("PRES");
                         menu();
                         break;
                     case 2:
                         System.out.println("NUMERO PRODUTOS:");
                         int numProds = scChoose.nextInt();
                         escreveArquivoProd(numProds);
+                        menu();
                         break;
                     case 3:
-                        System.out.println("TESTE VENDAS:");
-                        escreveArquivoVendas(1);
+                        System.out.println("Cliente efetuando a compra:");
+                        scChoose.nextLine();
+                        String clienteCompra = scChoose.nextLine();
+                        escreveArquivoVendas(1, clienteCompra);
+                        menu();
                         break;
                 }
                 break;
@@ -177,24 +197,30 @@ public class files {
                 System.out.println("2 - PESQUISA DE PRODUTOS");
                 System.out.println("3 - PESQUISA DE VENDAS");
                 System.out.println("------------------------");
+                System.out.println("Escolha: ");
                 choose2 = scChoose.nextInt();
                 switch (choose2) {
                     case 1:
-                        System.out.println("Doc: ");
+                        System.out.print("Doc: ");
                         scChoose.nextLine();
                         String docs = scChoose.nextLine();
-                        pesquisa(docs, "cliente");
+                        System.out.println("\n" + pesquisa(docs, "cliente"));
                         menu();
                         break;
                     case 2:
-                        System.out.println("Doc: ");
+                        System.out.print("Doc: ");
                         scChoose.nextLine();
                         docs = scChoose.nextLine();
-                        pesquisa(docs, "produtos");
+                        System.out.println(pesquisa(docs, "produtos"));
                         menu();
                         break;
                     case 3:
                         System.out.println("PESQUISA VENDAS");
+                        System.out.println("NOME DO CLIENTE: ");
+                        scChoose.nextLine();
+                        docs = scChoose.nextLine();
+                        pesquisa(docs, "vendas");
+                        menu();
                         break;
                 }
                 break;
@@ -217,12 +243,15 @@ public class files {
                         menu();
                         break;
                     case 3:
-                        System.out.println("PESQUISA VENDAS");
+                        lerArqVendas();
+                        menu();
                         break;
                 }
                 break;
         }
     }
+
+
 
     public static void escreveArquivoProd(int numprod) throws IOException {
         // clientes cl = new clientes();
@@ -238,15 +267,14 @@ public class files {
             // PADRÃO
             boolean statusArq = arq.createNewFile();
             System.out.print(arq.exists());
-            if (arq.exists()) {
-
+            if (!arq.exists()) {
                 pw.println("|NOME PRODUTO\t\t/PREÇO\t\t|");
                 for (int i = 0; i < numprod; i++) {
                     System.out.println("Nome do Produto: ");
                     pd[i] = scanner.nextLine();
-                    System.out.print("Preço:");
+                    System.out.println("Preço:");
                     double preco = scanner.nextDouble();
-                    pw.println("|" + pd[i] + "\t\t" + "R$ " + Double.toString(preco) + "|");
+                    pw.println(pd[i] + "\t\t" + "R$ " + Double.toString(preco));
                     pw.flush();
                 }
             }
@@ -256,8 +284,8 @@ public class files {
                     System.out.println("Nome do Produto: ");
                     pd[i] = scanner.nextLine();
                     System.out.print("Preço:");
-                    String cpf = scanner.nextLine();
-                    pw.println(pd[i] + "\t\t" + cpf);
+                    String preco = scanner.nextLine();
+                    pw.println(pd[i] + "\t\t" + "R$" +preco);
                     pw.flush();
                 }
             }
@@ -281,9 +309,29 @@ public class files {
             while ((linha = buffReader.readLine()) != null) {
                 linha = linha + "\n";
                 System.out.print(linha);
+            }
+            System.out.println("------------------------------");
+            fileReader.close();
+            buffReader.close();
+
+        } catch (IOException e) {
+            System.out.println("arquivo não encontrado, sera criado no processo");
+        }
+        return linha;
+    }
+    private static String lerArqVendas() {
+        File arq = new File("./vendas.txt");
+        String linha = "";
+
+        try {
+            FileReader fileReader = new FileReader(arq);
+            BufferedReader buffReader = new BufferedReader(fileReader);
+
+            while ((linha = buffReader.readLine()) != null) {
+                linha = linha + "\n";
+                System.out.print(linha);
 
             }
-
             fileReader.close();
             buffReader.close();
         } catch (IOException e) {
@@ -291,8 +339,7 @@ public class files {
         }
         return linha;
     }
-
-    public static void escreveArquivoVendas(int numVenda) throws IOException{
+    public static void escreveArquivoVendas(int numVenda, String clienteV) throws IOException{
         File arq = new File("./vendas.txt");
         FileWriter fw = new FileWriter(arq, true);
         BufferedWriter bw = new BufferedWriter(fw);
@@ -300,12 +347,13 @@ public class files {
         Scanner scanner = new Scanner(System.in);
         String[] pd = new String[numVenda];
 
+
         try {
             // LOGICA PARA VERIFICAR SE O ARQUIVO ESTA VAZIO/NÃO EXISTE E ESCREVER O LAYOUT
             // PADRÃO
             boolean statusArq = arq.createNewFile();
-            System.out.print(arq.exists());
-            if (arq.exists()) {
+
+            if (!arq.exists()) {
 
                 pw.println("|NOME PRODUTO\t\t/PREÇO\t\t|");
                 for (int i = 0; i < numVenda; i++) {
@@ -313,12 +361,13 @@ public class files {
                     pd[i] = scanner.nextLine();
                     System.out.print("Quantidade:");
                     int qnt = scanner.nextInt();
-                    System.out.println(pesquisa(pd[i],"produtos"));
                     String str = new String(pesquisa(pd[i],"produtos"));
+                    String cl = new String(pesquisa(clienteV,"cliente"));
                     int pos = str.indexOf("$");
-
-                    System.out.println(str.substring(pos+1));
-                    //pw.println("|" + pd[i] + "\t\t" + "R$ " + Double.parseDouble(str.replaceAll(str.substring(0,pos),"")) + "|");
+                    double preco = Double.parseDouble(str.substring(pos + 1));
+                    double precoTotal = preco * qnt;
+                    pw.printf("Cliente: %s | Produto: %s | Quantidade: %d | Preço Final: %.2f\n",cl.substring(0,cl.indexOf("-")),pd[i],qnt,precoTotal);
+                    pw.println("-------------------------------------------------");
                     pw.flush();
                 }
             }
@@ -327,9 +376,15 @@ public class files {
                 for (int i = 0; i < numVenda; i++) {
                     System.out.println("Nome do Produto: ");
                     pd[i] = scanner.nextLine();
-                    System.out.print("Preço:");
-                    String cpf = scanner.nextLine();
-                    pw.println(pd[i] + "\t\t" + cpf);
+                    System.out.print("Quantidade:");
+                    int qnt = scanner.nextInt();
+                    String str = new String(pesquisa(pd[i], "produtos"));
+                    String cl = new String(pesquisa(clienteV,"cliente"));
+                    int pos = str.indexOf("$");
+                    double preco = Double.parseDouble(str.substring(pos + 1));
+                    double precoTotal = preco * qnt;
+                    pw.printf("Cliente: %s | Produto: %s | Quantidade: %d | Preço Final: %.2f\n",cl.substring(0,cl.indexOf("-")),pd[i],qnt,precoTotal);
+                    pw.println("---------------------------------------------------------------------------");
                     pw.flush();
                 }
             }
@@ -341,5 +396,4 @@ public class files {
         }
 
     }
-
 }
